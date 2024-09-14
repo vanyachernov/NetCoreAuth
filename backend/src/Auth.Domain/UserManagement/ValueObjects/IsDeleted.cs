@@ -2,9 +2,9 @@ namespace Auth.Domain.UserManagement.ValueObjects;
 
 public record IsDeleted
 {
-    public IsDeleted(bool isDeleted)
+    public IsDeleted(bool status)
     {
-        Status = isDeleted;
+        Status = status;
     }
     
     public bool Status { get; }
