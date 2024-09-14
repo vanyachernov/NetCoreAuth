@@ -5,9 +5,9 @@ namespace Auth.Domain.UserManagement.ValueObjects;
 
 public record FullName
 {
-    private FullName(string fistName, string lastName)
+    private FullName(string firstName, string lastName)
     {
-        FirstName = fistName;
+        FirstName = firstName;
         LastName = lastName;
     }
 

@@ -6,11 +6,13 @@ namespace Auth.Domain.UserManagement;
 
 public class User : IdentityUser
 {
+    private User() { }
+
     private User(
         FullName fullName,
         IsDeleted isDeleted,
         LastAuthAt lastAuthAt)
-    {
+    { 
         FullName = fullName;
         IsDeleted = isDeleted;
         LastAuthAt = lastAuthAt;

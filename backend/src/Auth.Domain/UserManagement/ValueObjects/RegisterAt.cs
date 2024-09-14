@@ -2,9 +2,9 @@ namespace Auth.Domain.UserManagement.ValueObjects;
 
 public record RegisterAt
 {
-    public RegisterAt(DateTime registerAt)
+    public RegisterAt(DateTime date)
     {
-        Date = registerAt;
+        Date = date;
     }
     
     public DateTime Date { get; }

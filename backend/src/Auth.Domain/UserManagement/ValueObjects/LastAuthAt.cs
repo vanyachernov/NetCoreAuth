@@ -2,9 +2,9 @@ namespace Auth.Domain.UserManagement.ValueObjects;
 
 public record LastAuthAt
 {
-    public LastAuthAt(DateTime lastAuthAt)
+    public LastAuthAt(DateTime date)
     {
-        Date = lastAuthAt;
+        Date = date;
     }
     
     public DateTime Date { get; }
