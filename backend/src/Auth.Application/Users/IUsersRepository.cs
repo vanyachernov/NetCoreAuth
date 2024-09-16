@@ -1,3 +1,4 @@
+using Auth.Domain.Shared;
 using Auth.Domain.UserManagement;
 using Auth.Domain.UserManagement.ValueObjects;
 using CSharpFunctionalExtensions;
@@ -13,7 +14,7 @@ public interface IUsersRepository
     /// <param name="hashedPassword">Hash password.</param>
     /// <param name="cancellationToken">Cancellation Token.</param>
     /// <returns>A <see cref="Task{User}"/>.</returns>
-    Task<Result<Guid, string>> Register(User user, string hashedPassword, CancellationToken cancellationToken = default);
+    Task<Result<Guid, Error>> Register(User user, string hashedPassword, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Check if user exists by his email.
@@ -21,7 +22,7 @@ public interface IUsersRepository
     /// <param name="email">Email.</param>
     /// <param name="cancellationToken">Cancellation Token.</param>
     /// <returns>A <see cref="Task{User}"/>.</returns>
-    Task<Result<User, string>> GetByEmail(Email email, CancellationToken cancellationToken = default);
+    Task<Result<User, Error>> GetByEmail(Email email, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Sets deleted status for a user.

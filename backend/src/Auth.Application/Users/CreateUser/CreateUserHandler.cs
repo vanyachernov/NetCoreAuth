@@ -30,6 +30,9 @@ public class CreateUserHandler
         var lastAuthAt = new LastAuthAt(DateTime.UtcNow);
         var email = Email.Create(request.Email).Value;
         
+        var emailParts = email.Value.Split('@');
+        var username = emailParts[0];
+        
         var hashedPassword = _passwordHasher.Generate(request.Password);
         
         var existingUser = await _usersRepository.GetByEmail(
@@ -51,6 +54,8 @@ public class CreateUserHandler
         {
             return userToCreate.Error;
         }
+
+        userToCreate.Value.UserName = username;
         
         await _usersRepository.Register(userToCreate.Value, hashedPassword, cancellationToken);
 

@@ -24,7 +24,7 @@ public static class Errors
         
         public static Error AlreadyExists()
         {
-            return Error.Validation("volunteer.already.exists", "Volunteer already exists");
+            return Error.Validation("user.already.exists", "User already exists");
         }
     }
 }
