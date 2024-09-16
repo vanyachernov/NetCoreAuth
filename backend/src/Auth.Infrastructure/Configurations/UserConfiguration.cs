@@ -9,8 +9,7 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
 {
     public void Configure(EntityTypeBuilder<User> builder)
     {
-        builder
-            .ToTable("users");
+        builder.ToTable("users");
 
         builder.ComplexProperty(u => u.FullName, ub =>
         {
@@ -34,10 +33,13 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         {
             ub.Property(b => b.Date).IsRequired();
         });
-        
+
         builder.ComplexProperty(u => u.RegisterAt, ub =>
         {
             ub.Property(b => b.Date).IsRequired();
         });
+        
+        builder.HasIndex(u => u.Email)
+            .IsUnique();
     }
 }

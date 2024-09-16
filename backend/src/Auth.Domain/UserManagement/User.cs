@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Auth.Domain.UserManagement;
 
-public class User : IdentityUser
+public class User : IdentityUser 
 {
     private User() { }
 
@@ -24,14 +24,21 @@ public class User : IdentityUser
     public LastAuthAt LastAuthAt { get; private set; } = default!;
     public IsDeleted IsDeleted { get; private set; } = default!;
 
+    public void SetEmail(Email email) => Email = email.Value;
+
     public static Result<User> Create(
         FullName fullName,
         IsDeleted isDeleted,
-        LastAuthAt lastAuthAt)
+        LastAuthAt lastAuthAt,
+        Email email)
     {
-        return new User(
+        var user = new User(
             fullName,
             isDeleted,
             lastAuthAt);
+        
+        user.SetEmail(email);
+
+        return user;
     }
 }
