@@ -23,6 +23,11 @@ public class CreateUserHandler
         CreateUserRequest request,
         CancellationToken cancellationToken = default)
     {
+        if (request.Password != request.ConfirmPassword)
+        {
+            return Errors.General.ValueIsInvalid("ConfirmedPassword");
+        }
+        
         var fullName = FullName.Create(
             request.FullNameDto.FirstName, 
             request.FullNameDto.LastName).Value;
