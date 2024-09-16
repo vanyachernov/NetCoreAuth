@@ -1,3 +1,4 @@
+using Auth.API.Extensions;
 using Auth.Application.Users.CreateUser;
 using Auth.Domain.UserManagement;
 using Microsoft.AspNetCore.Identity;
@@ -31,9 +32,9 @@ public class AccountsController : ApplicationController
         
         if (result.IsFailure)
         {
-            return BadRequest();
+            return result.Error.ToResponse();
         }
-
+        
         return Ok(result.Value);
     }
     

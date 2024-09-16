@@ -14,16 +14,16 @@ public record FullName
     public string FirstName { get; } = default!;
     public string LastName { get; } = default!;
 
-    public static Result<FullName> Create(string firstName, string lastName)
+    public static Result<FullName, Error> Create(string firstName, string lastName)
     {
         if (string.IsNullOrWhiteSpace(firstName) || firstName.Length > Constants.MAX_LOW_TEXT_LENGTH)
         {
-            return Result.Failure<FullName>("First Name is invalid!");
+            return Errors.General.ValueIsInvalid("FirstName");
         }
         
         if (string.IsNullOrWhiteSpace(lastName) || lastName.Length > Constants.MAX_LOW_TEXT_LENGTH)
         {
-            return Result.Failure<FullName>("Last Name is invalid!");
+            return Errors.General.ValueIsInvalid("LastName");
         }
 
         return new FullName(firstName, lastName);
