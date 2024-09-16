@@ -7,12 +7,13 @@ namespace Auth.Application.Users;
 public interface IUsersRepository
 {
     /// <summary>
-    /// Created a new user.
+    /// Register a new user.
     /// </summary>
     /// <param name="user">A user.</param>
+    /// <param name="hashPassword">Hash password.</param>
     /// <param name="cancellationToken">Cancellation Token.</param>
     /// <returns>A <see cref="Task{User}"/>.</returns>
-    Task<Guid> Create(User user, CancellationToken cancellationToken = default);
+    Task<Guid> Register(User user, string hashPassword, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Check if user exists by his email.
