@@ -2,7 +2,6 @@ using Auth.Domain.Shared.Interfaces;
 using Auth.Domain.UserManagement;
 using Auth.Domain.UserManagement.ValueObjects;
 using CSharpFunctionalExtensions;
-using Microsoft.AspNetCore.Identity;
 
 namespace Auth.Application.Users.CreateUser;
 

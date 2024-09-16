@@ -10,10 +10,10 @@ public interface IUsersRepository
     /// Register a new user.
     /// </summary>
     /// <param name="user">A user.</param>
-    /// <param name="hashPassword">Hash password.</param>
+    /// <param name="hashedPassword">Hash password.</param>
     /// <param name="cancellationToken">Cancellation Token.</param>
     /// <returns>A <see cref="Task{User}"/>.</returns>
-    Task<Guid> Register(User user, string hashPassword, CancellationToken cancellationToken = default);
+    Task<Result<Guid, string>> Register(User user, string hashedPassword, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Check if user exists by his email.

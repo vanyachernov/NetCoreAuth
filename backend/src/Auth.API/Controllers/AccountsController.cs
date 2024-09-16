@@ -31,7 +31,11 @@ public class AccountsController : ApplicationController
         
         if (result.IsFailure)
         {
-            return BadRequest();
+            var errors = result.Error.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                .Select(error => error.Trim())
+                .ToList();
+
+            return BadRequest(new CreateUserResponse { Errors = errors });
         }
 
         return Ok(result.Value);

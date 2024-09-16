@@ -1,17 +1,20 @@
+using Auth.Application;
 using Auth.Domain.UserManagement;
 using Auth.Infrastructure;
 using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 {
+    builder.Services.AddControllers();
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen();
     
     builder.Services.AddIdentity<User, IdentityRole>()
         .AddEntityFrameworkStores<UserDbContext>();
-    
+
     builder.Services
-        .AddInfrastructure();
+        .AddInfrastructure()
+        .AddApplication();
 }
 
 var app = builder.Build();
@@ -23,6 +26,7 @@ var app = builder.Build();
     }
 
     app.UseHttpsRedirection();
+    app.MapControllers();
     app.Run();
 }
 
