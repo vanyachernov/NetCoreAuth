@@ -1,7 +1,9 @@
+using Auth.API.Validation;
 using Auth.Application;
 using Auth.Domain.UserManagement;
 using Auth.Infrastructure;
 using Microsoft.AspNetCore.Identity;
+using SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 {
@@ -15,6 +17,11 @@ var builder = WebApplication.CreateBuilder(args);
     builder.Services
         .AddInfrastructure()
         .AddApplication();
+    
+    builder.Services.AddFluentValidationAutoValidation(configuration =>
+    {
+        configuration.OverrideDefaultResultFactoryWith<CustomResultFactory>();
+    });
 }
 
 var app = builder.Build();

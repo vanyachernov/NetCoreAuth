@@ -1,3 +1,4 @@
+using Auth.Domain.Shared;
 using Auth.Domain.UserManagement.ValueObjects;
 using CSharpFunctionalExtensions;
 using Microsoft.AspNetCore.Identity;
@@ -26,7 +27,7 @@ public class User : IdentityUser
 
     public void SetEmail(Email email) => Email = email.Value;
 
-    public static Result<User> Create(
+    public static Result<User, Error> Create(
         FullName fullName,
         IsDeleted isDeleted,
         LastAuthAt lastAuthAt,

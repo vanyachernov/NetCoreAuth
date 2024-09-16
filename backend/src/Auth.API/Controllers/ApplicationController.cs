@@ -1,3 +1,4 @@
+using Auth.API.Response;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Auth.API.Controllers;
@@ -8,6 +9,8 @@ public abstract class ApplicationController : ControllerBase
 {
     public override OkObjectResult Ok(object? value)
     {
-        return new OkObjectResult(value);
+        var envelope = Envelope.Ok(value);
+        
+        return new OkObjectResult(envelope);
     }
 }

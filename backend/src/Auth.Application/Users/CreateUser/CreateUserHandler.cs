@@ -1,3 +1,4 @@
+using Auth.Domain.Shared;
 using Auth.Domain.Shared.Interfaces;
 using Auth.Domain.UserManagement;
 using Auth.Domain.UserManagement.ValueObjects;
@@ -18,20 +19,17 @@ public class CreateUserHandler
         _passwordHasher = passwordHasher;
     }
     
-    public async Task<Result<Guid, string>> Handle(
+    public async Task<Result<Guid, Error>> Handle(
         CreateUserRequest request,
         CancellationToken cancellationToken = default)
     {
         var fullName = FullName.Create(
             request.FullNameDto.FirstName, 
             request.FullNameDto.LastName).Value;
-
         var isDeletedStatus = new IsDeleted(false);
-
         var lastAuthAt = new LastAuthAt(DateTime.UtcNow);
-
         var email = Email.Create(request.Email).Value;
-
+        
         var hashedPassword = _passwordHasher.Generate(request.Password);
         
         var existingUser = await _usersRepository.GetByEmail(
@@ -40,7 +38,7 @@ public class CreateUserHandler
 
         if (existingUser.IsSuccess)
         {
-            return Result.Failure<Guid, string>("User already exists");
+            return Errors.General.AlreadyExists();
         }
         
         var userToCreate = User.Create(
@@ -55,7 +53,9 @@ public class CreateUserHandler
         }
         
         await _usersRepository.Register(userToCreate.Value, hashedPassword, cancellationToken);
-        
-        return userToCreate.Value.Id;
+
+        Guid.TryParse(userToCreate.Value.Id, out var userToCreateIdentifier);
+
+        return userToCreateIdentifier;
     }
 }
