@@ -1,23 +1,18 @@
 using System.Text;
-using Auth.API.Validation;
+using Auth.API;
 using Auth.Application;
-using Auth.Domain.UserManagement;
 using Auth.Infrastructure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
-using SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 {
     builder.Services.AddControllers();
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen();
-    
-    builder.Services.AddIdentity<User, IdentityRole>()
-        .AddEntityFrameworkStores<UserDbContext>();
 
     builder.Services
+        .AddApi()
         .AddInfrastructure()
         .AddApplication();
 
@@ -27,9 +22,9 @@ var builder = WebApplication.CreateBuilder(args);
     {
         options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
         options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-    }).AddJwtBearer(options =>
+    }).AddJwtBearer(opt =>
     {
-        options.TokenValidationParameters = new TokenValidationParameters
+        opt.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuer = true,
             ValidateAudience = true,
@@ -40,11 +35,6 @@ var builder = WebApplication.CreateBuilder(args);
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8
                 .GetBytes(jwtSettings.GetSection("securityKey").Value))
         };
-    });
-    
-    builder.Services.AddFluentValidationAutoValidation(configuration =>
-    {
-        configuration.OverrideDefaultResultFactoryWith<CustomResultFactory>();
     });
 }
 

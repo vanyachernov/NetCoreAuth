@@ -6,28 +6,12 @@ using CSharpFunctionalExtensions;
 
 namespace Auth.Application.Users.CreateUser;
 
-public class CreateUserHandler
+public class CreateUserHandler(IUsersRepository usersRepository)
 {
-    private readonly IUsersRepository _usersRepository;
-    private readonly IPasswordHasher _passwordHasher;
-
-    public CreateUserHandler(
-        IUsersRepository usersRepository,
-        IPasswordHasher passwordHasher)
-    {
-        _usersRepository = usersRepository;
-        _passwordHasher = passwordHasher;
-    }
-    
     public async Task<Result<Guid, Error>> Handle(
         CreateUserRequest request,
         CancellationToken cancellationToken = default)
     {
-        if (request.Password != request.ConfirmPassword)
-        {
-            return Errors.General.ValueIsInvalid("ConfirmedPassword");
-        }
-        
         var fullName = FullName.Create(
             request.FullNameDto.FirstName, 
             request.FullNameDto.LastName).Value;
@@ -37,17 +21,6 @@ public class CreateUserHandler
         
         var emailParts = email.Value.Split('@');
         var username = emailParts[0];
-        
-        var hashedPassword = _passwordHasher.Generate(request.Password);
-        
-        var existingUser = await _usersRepository.GetByEmail(
-            email, 
-            cancellationToken);
-
-        if (existingUser.IsSuccess)
-        {
-            return Errors.General.AlreadyExists();
-        }
         
         var userToCreate = User.Create(
             fullName,
@@ -62,7 +35,7 @@ public class CreateUserHandler
 
         userToCreate.Value.UserName = username;
         
-        await _usersRepository.Register(userToCreate.Value, hashedPassword, cancellationToken);
+        await usersRepository.Register(userToCreate.Value, request.Password, cancellationToken);
 
         Guid.TryParse(userToCreate.Value.Id, out var userToCreateIdentifier);
 

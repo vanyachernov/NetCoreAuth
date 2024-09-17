@@ -8,18 +8,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Auth.Infrastructure.Repositories;
 
-public class UsersRepository : IUsersRepository
+public class UsersRepository(UserManager<User> userManager) : IUsersRepository
 {
-    private readonly UserManager<User> _userManager;
-
-    public UsersRepository(UserManager<User> userManager)
+    public async Task<Result<Guid, Error>> Register(User user, string password, CancellationToken cancellationToken = default)
     {
-        _userManager = userManager;
-    }
-        
-    public async Task<Result<Guid, Error>> Register(User user, string hashedPassword, CancellationToken cancellationToken = default)
-    {
-        var result = await _userManager.CreateAsync(user, hashedPassword);
+        var result = await userManager.CreateAsync(user, password);
 
         if (!result.Succeeded)
         {
@@ -32,19 +25,6 @@ public class UsersRepository : IUsersRepository
         }
 
         return Result.Success<Guid, Error>(userId);
-    }
-
-    public async Task<Result<User, Error>> GetByEmail(Email email, CancellationToken cancellationToken = default)
-    {
-        var user = await _userManager.Users
-            .FirstOrDefaultAsync(u => u.Email == email.Value, cancellationToken);
-
-        if (user is null)
-        {
-            return Errors.General.NotFound();
-        }
-
-        return Result.Success<User, Error>(user);
     }
 
     public Task SetStatusAsync(Guid userId, bool deletedStatus, CancellationToken cancellationToken = default)

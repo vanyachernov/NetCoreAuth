@@ -1,5 +1,6 @@
 using Auth.Application.Users;
 using Auth.Domain.Shared.Interfaces;
+using Auth.Infrastructure.Features.Jwt;
 using Auth.Infrastructure.Providers;
 using Auth.Infrastructure.Repositories;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,6 +16,8 @@ public static class Inject
         services.AddScoped<IUsersRepository, UsersRepository>();
         
         services.AddScoped<IPasswordHasher, PasswordHasher>();
+
+        services.AddSingleton<JwtHandler>();
 
         return services;
     }
