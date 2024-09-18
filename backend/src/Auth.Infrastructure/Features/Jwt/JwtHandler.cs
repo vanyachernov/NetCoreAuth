@@ -29,7 +29,7 @@ public class JwtHandler
 
     private SigningCredentials GetSigningCredentials()
     {
-        var key = Encoding.UTF8.GetBytes(_jwtSettings["securityKey"]);
+        var key = Encoding.UTF8.GetBytes(_jwtSettings.GetSection("securityKey").Value!);
         var secret = new SymmetricSecurityKey(key);
 
         return new SigningCredentials(secret, SecurityAlgorithms.HmacSha256);
@@ -39,7 +39,9 @@ public class JwtHandler
     {
         var claims = new List<Claim>
         {
-            new Claim(ClaimTypes.NameIdentifier, user.Id)
+            new Claim(ClaimTypes.NameIdentifier, user.Id),
+            new Claim(ClaimTypes.Name, user.FullName.FirstName),
+            new Claim(ClaimTypes.Surname, user.FullName.LastName),
         };
 
         return claims;
@@ -47,11 +49,26 @@ public class JwtHandler
 
     private JwtSecurityToken GenerateTokenOptions(SigningCredentials credentials, List<Claim> claims)
     {
+        var validIssuer = _jwtSettings.GetSection("validIssuer").Value;
+        var validAudience = _jwtSettings.GetSection("validAudience").Value;
+        var validExpiry = _jwtSettings.GetSection("expiryInMinutes").Value;
+        
+        if (string.IsNullOrWhiteSpace(validIssuer))
+        {
+            throw new InvalidOperationException("JWT issuer is not configured properly.");
+        }
+        
+        if (!double.TryParse(validExpiry, out var expiry))
+        {
+            throw new ArgumentException("Invalid expiry time configuration for JWT.");
+        }
+        
         var tokenOptions = new JwtSecurityToken(
-            issuer: _jwtSettings["validIssuer"],
-            audience: _jwtSettings["validAudience"],
+            issuer: validIssuer,
+            audience: validAudience,
             claims: claims,
-            expires: DateTime.Now.AddMinutes(Convert.ToDouble(_jwtSettings["expiryInMinutes"])),
+            notBefore: DateTime.UtcNow,
+            expires: DateTime.UtcNow.AddMinutes(expiry),
             signingCredentials: credentials
         );
 
