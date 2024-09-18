@@ -1,5 +1,6 @@
 using Auth.Application.Users.CreateUser;
 using Auth.Application.Users.GetUserList;
+using Auth.Application.Users.SetDeletedStatus;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -12,6 +13,8 @@ public static class Inject
         services.AddScoped<CreateUserHandler>();
 
         services.AddScoped<GetUserListHandler>();
+        
+        services.AddScoped<ChangeUserStatusHandler>();
         
         services.AddValidatorsFromAssembly(typeof(Inject).Assembly);
         

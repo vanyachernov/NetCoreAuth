@@ -15,7 +15,10 @@ public interface IUsersRepository
     /// <param name="password">Hash password.</param>
     /// <param name="cancellationToken">Cancellation Token.</param>
     /// <returns>A <see cref="Task{User}"/>.</returns>
-    Task<Result<Guid, Error>> Register(User user, string password, CancellationToken cancellationToken = default);
+    Task<Result<Guid, Error>> Register(
+        User user, 
+        string password, 
+        CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Sets deleted status for a user.
@@ -24,7 +27,10 @@ public interface IUsersRepository
     /// <param name="deletedStatus">Status.</param>
     /// <param name="cancellationToken">Cancellation Token.</param>
     /// <returns>A <see cref="Task{User}"/>.</returns>
-    Task<Result<Guid, Error>> SetStatusAsync(Guid userId, IsDeleted deletedStatus, CancellationToken cancellationToken = default);
+    Task<Result<Guid, Error>> SetStatusAsync(
+        Guid userId, 
+        IsDeleted deletedStatus,
+        CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Gets user list.
