@@ -1,5 +1,7 @@
+using Auth.Application.Users.GetUserList;
 using Auth.Domain.Shared;
 using Auth.Domain.UserManagement;
+using Auth.Domain.UserManagement.ValueObjects;
 using CSharpFunctionalExtensions;
 
 namespace Auth.Application.Users;
@@ -22,5 +24,12 @@ public interface IUsersRepository
     /// <param name="deletedStatus">Status.</param>
     /// <param name="cancellationToken">Cancellation Token.</param>
     /// <returns>A <see cref="Task{User}"/>.</returns>
-    Task SetStatusAsync(Guid userId, bool deletedStatus, CancellationToken cancellationToken = default);
+    Task<Result<Guid, Error>> SetStatusAsync(Guid userId, IsDeleted deletedStatus, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Gets user list.
+    /// </summary>
+    /// <param name="cancellationToken">Cancellation Token.</param>
+    /// <returns>A <see cref="Task{User}"/>.</returns>
+    Task<Result<List<GetUserListResponse>>> GetUsers(CancellationToken cancellationToken = default);
 }

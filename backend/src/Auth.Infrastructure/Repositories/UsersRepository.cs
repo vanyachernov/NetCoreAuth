@@ -1,16 +1,20 @@
+using Auth.Application.DTOs;
 using Auth.Application.Users;
+using Auth.Application.Users.GetUserList;
 using Auth.Domain.Shared;
 using Auth.Domain.UserManagement;
 using Auth.Domain.UserManagement.ValueObjects;
 using CSharpFunctionalExtensions;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 
 namespace Auth.Infrastructure.Repositories;
 
 public class UsersRepository(UserManager<User> userManager) : IUsersRepository
 {
-    public async Task<Result<Guid, Error>> Register(User user, string password, CancellationToken cancellationToken = default)
+    public async Task<Result<Guid, Error>> Register(
+        User user, 
+        string password, 
+        CancellationToken cancellationToken = default)
     {
         var result = await userManager.CreateAsync(user, password);
 
@@ -27,8 +31,38 @@ public class UsersRepository(UserManager<User> userManager) : IUsersRepository
         return Result.Success<Guid, Error>(userId);
     }
 
-    public Task SetStatusAsync(Guid userId, bool deletedStatus, CancellationToken cancellationToken = default)
+    public async Task<Result<Guid, Error>> SetStatusAsync(
+        Guid userId, 
+        IsDeleted deletedStatus, 
+        CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        var user = await userManager.FindByIdAsync(userId.ToString());
+
+        if (user is null)
+        {
+            return Errors.General.NotFound(userId);
+        }
+
+        user.SetDeletedStatus(deletedStatus);
+
+        await userManager.UpdateAsync(user);
+
+        return Result.Success<Guid, Error>(userId);
+    }
+
+    public Task<Result<List<GetUserListResponse>>> GetUsers(CancellationToken cancellationToken = default)
+    {
+        var users = userManager.Users.ToList();
+
+        var userListResponse = users.Select(user => new GetUserListResponse
+        {
+            Id = Guid.Parse(user.Id),
+            FullName = new FullNameDto(user.FullName.FirstName, user.FullName.LastName),
+            RegisterAt = new RegisterAtDto(user.RegisterAt.Date),
+            LastAuthAt = new LastAuthAtDto(user.LastAuthAt.Date),
+            Status = new IsDeletedDto(user.IsDeleted.Status)
+        }).ToList();
+
+        return Task.FromResult(Result.Success(userListResponse));
     }
 }

@@ -1,3 +1,4 @@
+using Auth.Application.Users.GetUserList;
 using Auth.Domain.UserManagement;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -10,9 +11,12 @@ public class UsersController : ApplicationController
 {
     [HttpGet]
     [Authorize]
-    public async Task<List<User>> GetAccounts(CancellationToken cancellationToken = default)
+    public async Task<ActionResult<List<GetUserListResponse>>> GetAccounts(
+        [FromServices] GetUserListHandler handler,
+        CancellationToken cancellationToken = default)
     {
-        var users = new List<User>();
-        return users;
-    };
+        var users = await handler.Handle(cancellationToken);
+        
+        return Ok(users.Value);
+    }
 }
