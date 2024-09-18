@@ -26,7 +26,9 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
 
         builder.ComplexProperty(u => u.IsDeleted, ub =>
         {
-            ub.Property(b => b.Status).IsRequired();
+            ub.Property(b => b.Status)
+                .HasDefaultValue(false)
+                .IsRequired();
         });
         
         builder.ComplexProperty(u => u.LastAuthAt, ub =>

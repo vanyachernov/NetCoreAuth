@@ -1,27 +1,19 @@
-using Auth.API.Validation;
+using Auth.API;
 using Auth.Application;
-using Auth.Domain.UserManagement;
 using Auth.Infrastructure;
-using Microsoft.AspNetCore.Identity;
-using SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 {
+    var configuration = builder.Configuration;
+    
     builder.Services.AddControllers();
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen();
-    
-    builder.Services.AddIdentity<User, IdentityRole>()
-        .AddEntityFrameworkStores<UserDbContext>();
 
     builder.Services
+        .AddApi(configuration)
         .AddInfrastructure()
         .AddApplication();
-    
-    builder.Services.AddFluentValidationAutoValidation(configuration =>
-    {
-        configuration.OverrideDefaultResultFactoryWith<CustomResultFactory>();
-    });
 }
 
 var app = builder.Build();
@@ -32,8 +24,12 @@ var app = builder.Build();
         app.UseSwaggerUI();
     }
 
-    app.UseHttpsRedirection();
+    app.UseAuthentication();
+    
+    app.UseAuthorization();
+    
     app.MapControllers();
+    
     app.Run();
 }
 

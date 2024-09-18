@@ -1,25 +1,22 @@
+using Auth.Application.DTOs;
 using Auth.Application.Users;
+using Auth.Application.Users.GetUserList;
 using Auth.Domain.Shared;
 using Auth.Domain.UserManagement;
 using Auth.Domain.UserManagement.ValueObjects;
 using CSharpFunctionalExtensions;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 
 namespace Auth.Infrastructure.Repositories;
 
-public class UsersRepository : IUsersRepository
+public class UsersRepository(UserManager<User> userManager) : IUsersRepository
 {
-    private readonly UserManager<User> _userManager;
-
-    public UsersRepository(UserManager<User> userManager)
+    public async Task<Result<Guid, Error>> Register(
+        User user, 
+        string password, 
+        CancellationToken cancellationToken = default)
     {
-        _userManager = userManager;
-    }
-        
-    public async Task<Result<Guid, Error>> Register(User user, string hashedPassword, CancellationToken cancellationToken = default)
-    {
-        var result = await _userManager.CreateAsync(user, hashedPassword);
+        var result = await userManager.CreateAsync(user, password);
 
         if (!result.Succeeded)
         {
@@ -34,21 +31,38 @@ public class UsersRepository : IUsersRepository
         return Result.Success<Guid, Error>(userId);
     }
 
-    public async Task<Result<User, Error>> GetByEmail(Email email, CancellationToken cancellationToken = default)
+    public async Task<Result<Guid, Error>> SetStatusAsync(
+        Guid userId, 
+        IsDeleted deletedStatus, 
+        CancellationToken cancellationToken = default)
     {
-        var user = await _userManager.Users
-            .FirstOrDefaultAsync(u => u.Email == email.Value, cancellationToken);
+        var user = await userManager.FindByIdAsync(userId.ToString());
 
         if (user is null)
         {
-            return Errors.General.NotFound();
+            return Errors.General.NotFound(userId);
         }
 
-        return Result.Success<User, Error>(user);
+        user.SetDeletedStatus(deletedStatus);
+
+        await userManager.UpdateAsync(user);
+
+        return Result.Success<Guid, Error>(userId);
     }
 
-    public Task SetStatusAsync(Guid userId, bool deletedStatus, CancellationToken cancellationToken = default)
+    public Task<Result<List<GetUserListResponse>>> GetUsers(CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        var users = userManager.Users.ToList();
+
+        var userListResponse = users.Select(user => new GetUserListResponse
+        {
+            Id = Guid.Parse(user.Id),
+            FullName = new FullNameDto(user.FullName.FirstName, user.FullName.LastName),
+            RegisterAt = new RegisterAtDto(user.RegisterAt.Date),
+            LastAuthAt = new LastAuthAtDto(user.LastAuthAt.Date),
+            Status = new IsDeletedDto(user.IsDeleted.Status)
+        }).ToList();
+
+        return Task.FromResult(Result.Success(userListResponse));
     }
 }

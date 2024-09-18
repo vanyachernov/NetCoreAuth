@@ -13,9 +13,5 @@ public class CreateUserRequestValidator : AbstractValidator<CreateUserRequest>
                 FullName.Create(f.FirstName, f.LastName));
         
         RuleFor(c => c.Email).MustBeValueObject(Email.Create);
-
-        RuleFor(c => c.Password)
-            .Equal(c => c.ConfirmPassword)
-            .WithMessage("Password must match");
     }
 }

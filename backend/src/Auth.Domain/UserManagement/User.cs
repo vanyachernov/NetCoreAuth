@@ -26,6 +26,7 @@ public class User : IdentityUser
     public IsDeleted IsDeleted { get; private set; } = default!;
 
     public void SetEmail(Email email) => Email = email.Value;
+    public void SetDeletedStatus(IsDeleted status) => IsDeleted = status;
 
     public static Result<User, Error> Create(
         FullName fullName,

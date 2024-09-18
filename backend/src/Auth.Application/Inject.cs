@@ -1,4 +1,5 @@
 using Auth.Application.Users.CreateUser;
+using Auth.Application.Users.GetUserList;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -9,6 +10,8 @@ public static class Inject
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {
         services.AddScoped<CreateUserHandler>();
+
+        services.AddScoped<GetUserListHandler>();
         
         services.AddValidatorsFromAssembly(typeof(Inject).Assembly);
         

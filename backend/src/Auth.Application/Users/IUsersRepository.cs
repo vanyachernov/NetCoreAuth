@@ -1,3 +1,4 @@
+using Auth.Application.Users.GetUserList;
 using Auth.Domain.Shared;
 using Auth.Domain.UserManagement;
 using Auth.Domain.UserManagement.ValueObjects;
@@ -11,18 +12,10 @@ public interface IUsersRepository
     /// Register a new user.
     /// </summary>
     /// <param name="user">A user.</param>
-    /// <param name="hashedPassword">Hash password.</param>
+    /// <param name="password">Hash password.</param>
     /// <param name="cancellationToken">Cancellation Token.</param>
     /// <returns>A <see cref="Task{User}"/>.</returns>
-    Task<Result<Guid, Error>> Register(User user, string hashedPassword, CancellationToken cancellationToken = default);
-
-    /// <summary>
-    /// Check if user exists by his email.
-    /// </summary>
-    /// <param name="email">Email.</param>
-    /// <param name="cancellationToken">Cancellation Token.</param>
-    /// <returns>A <see cref="Task{User}"/>.</returns>
-    Task<Result<User, Error>> GetByEmail(Email email, CancellationToken cancellationToken = default);
+    Task<Result<Guid, Error>> Register(User user, string password, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Sets deleted status for a user.
@@ -31,5 +24,12 @@ public interface IUsersRepository
     /// <param name="deletedStatus">Status.</param>
     /// <param name="cancellationToken">Cancellation Token.</param>
     /// <returns>A <see cref="Task{User}"/>.</returns>
-    Task SetStatusAsync(Guid userId, bool deletedStatus, CancellationToken cancellationToken = default);
+    Task<Result<Guid, Error>> SetStatusAsync(Guid userId, IsDeleted deletedStatus, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Gets user list.
+    /// </summary>
+    /// <param name="cancellationToken">Cancellation Token.</param>
+    /// <returns>A <see cref="Task{User}"/>.</returns>
+    Task<Result<List<GetUserListResponse>>> GetUsers(CancellationToken cancellationToken = default);
 }
