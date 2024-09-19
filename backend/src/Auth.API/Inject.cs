@@ -2,6 +2,7 @@ using System.Text;
 using Auth.API.Validation;
 using Auth.Domain.UserManagement;
 using Auth.Infrastructure;
+using DotNetEnv;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
@@ -13,6 +14,7 @@ public static class Inject
 {
     public static IServiceCollection AddApi(this IServiceCollection services, IConfiguration configuration)
     {
+        DotNetEnv.Env.Load();
         
         services.AddIdentity<User, IdentityRole>(options => 
             {
@@ -23,10 +25,10 @@ public static class Inject
             })
             .AddEntityFrameworkStores<UserDbContext>();
         
-        var jwtSettings = configuration.GetSection("JWTSettings");
-        var jwtValidIssuer = jwtSettings.GetSection("validIssuer").Value;
-        var jwtValidAudience = jwtSettings.GetSection("validAudience").Value;
-        var jwtSecurityKey = jwtSettings.GetSection("securityKey").Value;
+        
+        var jwtSecurityKey = Env.GetString("JWT_SECRET");
+        var jwtValidIssuer = Env.GetString("JWT_ISSUER");
+        var jwtValidAudience = Env.GetString("JWT_AUDIENCE");
 
         services.AddAuthentication(options =>
         {
