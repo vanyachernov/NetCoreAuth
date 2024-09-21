@@ -1,0 +1,36 @@
+﻿services:
+  postgres:
+    container_name: postgres
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_DB: users_family
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: root
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    ports:
+      - "5434:5432"
+  backend-service:
+    container_name: auth
+    image: auth
+    env_file:
+      - ./src/Auth.API/.env
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    ports:
+      - "8001:5181"
+    depends_on:
+      - postgres
+  frontend-service:
+    container_name: frontend
+    image: front
+    build:
+      context: ../frontend/auth
+    ports:
+      - "8002:8000"
+    depends_on:
+      - backend-service
+
+volumes:
+  postgres-data:
