@@ -12,10 +12,12 @@
     ports:
       - "5434:5432"
   backend-service:
-    container_name: auth
-    image: auth
+    container_name: backend
+    image: back
+    build:
+      context: ./backend/src
     env_file:
-      - ./src/Auth.API/.env
+      - ./backend/src/Auth.API/.env
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
     ports:
@@ -26,7 +28,7 @@
     container_name: frontend
     image: front
     build:
-      context: ../frontend/auth
+      context: ./frontend/auth
     ports:
       - "8002:8000"
     depends_on:
