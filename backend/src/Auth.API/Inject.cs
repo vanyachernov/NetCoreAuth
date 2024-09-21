@@ -61,7 +61,7 @@ public static class Inject
         {
             options.AddDefaultPolicy(policy =>
             {
-                policy.WithOrigins("http://localhost:5173");
+                policy.WithOrigins("http://localhost:8002");
                 policy.AllowAnyHeader();
                 policy.AllowAnyMethod();
             });

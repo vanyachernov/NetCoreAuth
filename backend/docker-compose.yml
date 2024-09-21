@@ -22,6 +22,15 @@
       - "8001:5181"
     depends_on:
       - postgres
+  frontend-service:
+    container_name: frontend
+    image: front
+    build:
+      context: ../frontend/auth
+    ports:
+      - "8002:8000"
+    depends_on:
+      - backend-service
 
 volumes:
   postgres-data:
