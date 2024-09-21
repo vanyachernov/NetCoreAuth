@@ -1,12 +1,12 @@
-import { useNavigate } from "react-router-dom";
 import AuthForm from "../../../components/AuthForm.tsx";
 import {Authenticate} from "../services/authService.ts";
 import { AuthenticateUserRequest } from "../../auth/models/AuthenticateUserRequest.ts";
 import {ShowToast} from "../../../utils/toast.ts";
 import {useToast} from "@chakra-ui/react";
+import axios from "axios";
+import {APIError} from "../services/userService.ts";
 
 const LoginActions = () => {
-    const navigate = useNavigate();
     const toast = useToast();
 
     const handleLogin = async (request: AuthenticateUserRequest) => {
@@ -17,17 +17,20 @@ const LoginActions = () => {
             {
                 window.location.reload();
             }
-        } catch (error : Response) {
-            const errors = error?.response?.data?.errors;
+        } catch (error : unknown) {
             let errorMessage = "Не удалось авторизироваться. Попробуйте позже!";
 
-            if (Array.isArray(errors)) {
-                errorMessage = errors
-                    .map((err: any) => err.errorMessage || "Произошла ошибка")
-                    .join(", ");
+            if (axios.isAxiosError(error)) {
+                const errors: APIError[] | undefined = error.response?.data?.errors;
+
+                if (Array.isArray(errors)) {
+                    errorMessage = errors
+                        .map((err: APIError) => err.errorMessage || "Произошла ошибка")
+                        .join(", ");
+                }
             }
 
-            ShowToast(toast, "Ошибка регистрации", errorMessage, "error", 5000, "bottom-right");
+            ShowToast(toast, "Ошибка авторизации", errorMessage, "error");
         }
     };
 

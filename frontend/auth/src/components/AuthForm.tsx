@@ -1,7 +1,7 @@
-import React, { useState } from "react";
 import { Box, Button, Input, FormControl, FormLabel, Heading } from "@chakra-ui/react";
-import {AuthenticateUserRequest} from "../features/auth/models/AuthenticateUserRequest.ts";
-import {CreateUserRequest} from "../features/auth/models/CreateUserRequest.ts";
+import { AuthenticateUserRequest } from "../features/auth/models/AuthenticateUserRequest";
+import { CreateUserRequest } from "../features/auth/models/CreateUserRequest";
+import {useState} from "react";
 
 interface AuthFormProps {
     title: string;
@@ -20,13 +20,15 @@ const AuthForm = ({ title, buttonText, onSubmit, isRegister = false }: AuthFormP
         e.preventDefault();
 
         if (isRegister) {
-            onSubmit({
+            const formData: CreateUserRequest = {
                 fullNameDto: { firstName, lastName },
                 email,
-                password
-            });
+                password,
+            };
+            onSubmit(formData);
         } else {
-            onSubmit({ email, password });
+            const formData: AuthenticateUserRequest = { email, password };
+            onSubmit(formData);
         }
     };
 

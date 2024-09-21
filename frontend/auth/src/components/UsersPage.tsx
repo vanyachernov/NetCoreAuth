@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {
     Heading,
     Box,
@@ -24,10 +24,10 @@ import {ShowToast} from "../utils/toast.ts";
 const UsersPage = () => {
     const [users, setUsers] = useState<UserResponse[]>([])
     const [selectedRows, setSelectedRows] = useState<string[]>([]);
-    const [isLoading, setIsLoading] = useState<boolean>(true);
     const { isOpen, onOpen, onClose } = useDisclosure();
-    const cancelRef = React.useRef();
+    const cancelRef = useRef<HTMLButtonElement>(null);
     const toast = useToast();
+    
 
     useEffect(() => {
         const loadUsers = async () => {
@@ -36,8 +36,6 @@ const UsersPage = () => {
                 setUsers(fetchUsers);
             } catch (error) {
                 console.error("Failed to fetch users:", error);
-            } finally {
-                setIsLoading(false);
             }
         };
 
@@ -98,8 +96,9 @@ const UsersPage = () => {
             onClose();
 
             ShowToast(toast, "Пользователи удалены", "Выбранные пользователи были успешно удалены.", "success");
-        } catch (error: any) {
-            ShowToast(toast, "Ошибка удаления", "Не удалось удалить выбранных пользователей. Попробуйте позже.", "error");
+        } catch (error) {
+            const errorMessage = (error as Error).message || "Неизвестная ошибка";
+            ShowToast(toast, "Ошибка удаления", `Не удалось удалить выбранных пользователей. ${errorMessage}.`, "error");
         }
     };
     

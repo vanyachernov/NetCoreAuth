@@ -4,13 +4,13 @@ import {useNavigate} from 'react-router-dom';
 import { useEffect, useState } from "react";
 import {jwtDecode} from "jwt-decode";
 import { Link as RouterLink } from "react-router-dom";
+import {CustomJwtPayload} from "../features/users/services/userService.ts";
 
 interface HeaderProps {
     isAuthenticated: boolean;
-    onLogout?: () => void;
 }
 
-const Header = ({ isAuthenticated, onLogout }: HeaderProps) => {
+const Header = ({ isAuthenticated }: HeaderProps) => {
     const navigate = useNavigate();
     const [userName, setUserName] = useState<string | undefined>();
 
@@ -18,7 +18,7 @@ const Header = ({ isAuthenticated, onLogout }: HeaderProps) => {
         const user = localStorage.getItem("panel");
         
         if (user) {
-            const decoded = jwtDecode(user);
+            const decoded = jwtDecode<CustomJwtPayload>(user);
             const firstName = decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"];
             const lastName = decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname"];
             

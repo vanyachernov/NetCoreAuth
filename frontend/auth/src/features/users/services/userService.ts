@@ -4,6 +4,16 @@ import {ChangeUserStatusRequest} from "../../auth/models/ChangeUserStatusRequest
 import {jwtDecode, JwtPayload} from "jwt-decode";
 import {apiClient} from "./baseService.ts";
 
+export interface CustomJwtPayload extends JwtPayload {
+    "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"?: string;
+    "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"?: string;
+    "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname"?: string;
+}
+
+export interface APIError {
+    errorMessage: string;
+}
+
 const GetUserData = () => {
     const userData = localStorage.getItem("panel");
     return userData ? JSON.parse(userData) : null;
@@ -14,7 +24,7 @@ export const GetCurrentUserId = (): string | null => {
 
     if (token) {
         try {
-            const decoded = jwtDecode<JwtPayload>(token);
+            const decoded = jwtDecode<CustomJwtPayload>(token);
 
             return decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"] || null;
         } catch (error) {
