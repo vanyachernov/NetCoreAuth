@@ -22,6 +22,7 @@ public static class Inject
                 options.Password.RequireDigit = false;
                 options.Password.RequireUppercase = false;
                 options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireLowercase = false;
             })
             .AddEntityFrameworkStores<UserDbContext>();
         
@@ -54,6 +55,16 @@ public static class Inject
         services.AddFluentValidationAutoValidation(options =>
         {
             options.OverrideDefaultResultFactoryWith<CustomResultFactory>();
+        });
+        
+        services.AddCors(options =>
+        {
+            options.AddDefaultPolicy(policy =>
+            {
+                policy.WithOrigins("http://localhost:5173");
+                policy.AllowAnyHeader();
+                policy.AllowAnyMethod();
+            });
         });
 
         return services;

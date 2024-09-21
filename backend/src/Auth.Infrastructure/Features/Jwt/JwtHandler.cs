@@ -55,6 +55,7 @@ public class JwtHandler
         var claims = new List<Claim>
         {
             new Claim(ClaimTypes.NameIdentifier, user.Id),
+            new Claim(ClaimTypes.Email, user.Email!),
             new Claim(ClaimTypes.Name, user.FullName.FirstName),
             new Claim(ClaimTypes.Surname, user.FullName.LastName),
         };

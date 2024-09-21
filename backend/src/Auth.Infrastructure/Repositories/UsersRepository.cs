@@ -57,6 +57,7 @@ public class UsersRepository(UserManager<User> userManager) : IUsersRepository
         var userListResponse = users.Select(user => new GetUserListResponse
         {
             Id = Guid.Parse(user.Id),
+            Email = new EmailDto(user.Email!),
             FullName = new FullNameDto(user.FullName.FirstName, user.FullName.LastName),
             RegisterAt = new RegisterAtDto(user.RegisterAt.Date),
             LastAuthAt = new LastAuthAtDto(user.LastAuthAt.Date),
@@ -64,5 +65,26 @@ public class UsersRepository(UserManager<User> userManager) : IUsersRepository
         }).ToList();
 
         return Task.FromResult(Result.Success(userListResponse));
+    }
+
+    public async Task<Result<Guid, Error>> DeleteAsync(
+        Guid userId, 
+        CancellationToken cancellationToken = default)
+    {
+        var user = await userManager.FindByIdAsync(userId.ToString());
+
+        if (user is null)
+        {
+            return Errors.General.NotFound(userId);
+        }
+
+        var result = await userManager.DeleteAsync(user);
+
+        if (!result.Succeeded)
+        {
+            return Errors.General.ValueIsInvalid("Failed to delete user");
+        }
+
+        return Result.Success<Guid, Error>(userId);
     }
 }
