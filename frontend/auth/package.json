@@ -8,15 +8,20 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "build-t": "tailwindcss -i ./src/index.css -o ./src/styles.css --minify"
+    "build-t": "tailwindcss -i src/assets/css/index.css -o ./src/styles.css --minify"
   },
   "dependencies": {
+    "@chakra-ui/icons": "^2.1.1",
     "@chakra-ui/react": "^2.8.2",
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
+    "axios": "^1.7.7",
     "framer-motion": "^11.5.4",
+    "jwt-decode": "^4.0.0",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.26.2",
+    "universal-cookie": "^7.2.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.9.0",

@@ -1,14 +1,39 @@
-import './App.css'
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import Header from './components/Header';
+import { routes } from "./shared/routes.ts";
 
-function App() {
+const isAuthenticated = () => {
+    const token = localStorage.getItem('panel');
+    return !!token;
+};
 
-  return (
-    <div className="bg-amber-600">
-      <h1 className="mt-2">
-        Hello, World
-      </h1>
-    </div>
-  )
-}
+const App: React.FC = () => {
+    return (
+        <Router>
+            <Header isAuthenticated={isAuthenticated()} />
+            <Routes>
+                <Route
+                    path={routes.login.path}
+                    element={isAuthenticated() ? <Navigate to={routes.users.path} replace /> : <routes.login.component />}
+                />
+                <Route
+                    path={routes.register.path}
+                    element={isAuthenticated() ? <Navigate to={routes.users.path} replace /> : <routes.register.component />}
+                />
 
-export default App
+                <Route
+                    path={routes.users.path}
+                    element={isAuthenticated() ? <routes.users.component /> : <Navigate to={routes.login.path} replace />}
+                />
+
+                <Route
+                    path={routes.notFound.path}
+                    element={isAuthenticated() ? <Navigate to={routes.users.path} replace /> : <routes.notFound.component />}
+                />
+            </Routes>
+        </Router>
+    );
+};
+
+export default App;

@@ -38,4 +38,14 @@ public interface IUsersRepository
     /// <param name="cancellationToken">Cancellation Token.</param>
     /// <returns>A <see cref="Task{User}"/>.</returns>
     Task<Result<List<GetUserListResponse>>> GetUsers(CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Delete user.
+    /// </summary>
+    /// <param name="userId">A user identifier.</param>
+    /// <param name="cancellationToken">Cancellation Token.</param>
+    /// <returns>A <see cref="Task{User}"/>.</returns>
+    Task<Result<Guid, Error>> DeleteAsync(
+        Guid userId, 
+        CancellationToken cancellationToken = default);
 }
