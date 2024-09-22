@@ -61,7 +61,7 @@ public static class Inject
         {
             options.AddDefaultPolicy(policy =>
             {
-                policy.WithOrigins("https://net-core-auth.vercel.app/");
+                policy.WithOrigins("https://net-core-auth.vercel.app");
                 policy.AllowAnyHeader();
                 policy.AllowAnyMethod();
             });
