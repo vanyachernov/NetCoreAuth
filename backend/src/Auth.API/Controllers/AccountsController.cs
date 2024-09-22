@@ -53,6 +53,8 @@ public class AccountsController(UserManager<User> userManager) : ApplicationCont
         }
 
         user.SetLastAuthDate(new LastAuthAt(DateTime.UtcNow));
+        
+        await userManager.UpdateAsync(user);
 
         var token = handler.CreateToken(user);
 
