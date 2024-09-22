@@ -34,6 +34,7 @@ const UserTable = ({ data, selectedRows, handleSelectRow, handleSelectAll }: Use
                     </Th>
                     <Th color="white">Name / Position</Th>
                     <Th color="white">Email</Th>
+                    <Th color="white">Register At</Th>
                     <Th color="white">Last Login</Th>
                     <Th color="white">Status</Th>
                 </Tr>
@@ -49,7 +50,8 @@ const UserTable = ({ data, selectedRows, handleSelectRow, handleSelectAll }: Use
                         </Td>
                         <Td>{row.fullName.firstName} {row.fullName.lastName}</Td>
                         <Td>{row.email.value}</Td>
-                        <Td>test</Td>
+                        <Td>{new Date(row.registerAt.date).toLocaleDateString()}</Td>
+                        <Td>{new Date(row.lastAuthAt.date).toLocaleDateString()}</Td>
                         <Td>{row.status.value ? "Blocked" : "Active"}</Td>
                     </Tr>
                 ))}
