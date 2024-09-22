@@ -33,7 +33,7 @@ namespace Auth.Infrastructure.Migrations
                     id = table.Column<string>(type: "text", nullable: false),
                     first_name = table.Column<string>(type: "character varying(30)", maxLength: 30, nullable: false),
                     last_name = table.Column<string>(type: "character varying(30)", maxLength: 30, nullable: false),
-                    is_deleted_status = table.Column<bool>(type: "boolean", nullable: false),
+                    is_deleted_status = table.Column<bool>(type: "boolean", nullable: false, defaultValue: false),
                     last_auth_at_date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     register_at_date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     user_name = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
@@ -192,6 +192,12 @@ namespace Auth.Infrastructure.Migrations
                 name: "EmailIndex",
                 table: "AspNetUsers",
                 column: "normalized_email");
+
+            migrationBuilder.CreateIndex(
+                name: "ix_asp_net_users_email",
+                table: "AspNetUsers",
+                column: "email",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "UserNameIndex",

@@ -17,7 +17,7 @@ public class UserDbContext(IConfiguration configuration) : IdentityDbContext<Use
         var dbUser = Environment.GetEnvironmentVariable("DB_USER");
         var dbPassword = Environment.GetEnvironmentVariable("DB_PASSWORD");
         
-        var connectionString = $"Server={dbServer};Port={dbPort};Database={dbName};User Id={dbUser};Password={dbPassword};";
+        var connectionString = $"Server={dbServer};Port={dbPort};Database={dbName};User Id={dbUser};Password={dbPassword};SearchPath=common;";
         
         optionsBuilder
             .UseNpgsql(connectionString)

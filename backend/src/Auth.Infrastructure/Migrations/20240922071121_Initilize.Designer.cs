@@ -13,7 +13,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Auth.Infrastructure.Migrations
 {
     [DbContext(typeof(UserDbContext))]
-    [Migration("20240914105409_Initilize")]
+    [Migration("20240922071121_Initilize")]
     partial class Initilize
     {
         /// <inheritdoc />
@@ -115,7 +115,9 @@ namespace Auth.Infrastructure.Migrations
                             b1.IsRequired();
 
                             b1.Property<bool>("Status")
+                                .ValueGeneratedOnAdd()
                                 .HasColumnType("boolean")
+                                .HasDefaultValue(false)
                                 .HasColumnName("is_deleted_status");
                         });
 
@@ -139,6 +141,10 @@ namespace Auth.Infrastructure.Migrations
 
                     b.HasKey("Id")
                         .HasName("pk_asp_net_users");
+
+                    b.HasIndex("Email")
+                        .IsUnique()
+                        .HasDatabaseName("ix_asp_net_users_email");
 
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
