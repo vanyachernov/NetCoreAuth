@@ -3,6 +3,7 @@ using Auth.Application.Users.AuthenticateUser;
 using Auth.Application.Users.CreateUser;
 using Auth.Domain.Shared;
 using Auth.Domain.UserManagement;
+using Auth.Domain.UserManagement.ValueObjects;
 using Auth.Infrastructure.Features.Jwt;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -50,6 +51,8 @@ public class AccountsController(UserManager<User> userManager) : ApplicationCont
         {
             return Unauthorized(new AuthenticateUserResponse { ErrorMessage = "Invalid Authentication" });
         }
+
+        user.SetLastAuthDate(new LastAuthAt(DateTime.UtcNow));
 
         var token = handler.CreateToken(user);
 
