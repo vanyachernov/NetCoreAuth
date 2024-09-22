@@ -31,6 +31,11 @@ const App: React.FC = () => {
                     path={routes.notFound.path}
                     element={isAuthenticated() ? <Navigate to={routes.users.path} replace /> : <routes.notFound.component />}
                 />
+
+                <Route
+                    path="*"
+                    element={<routes.notFound.component />}
+                />
             </Routes>
         </Router>
     );
