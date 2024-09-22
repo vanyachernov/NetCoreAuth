@@ -554,15 +554,6 @@ video {
   display: none;
 }
 
-.mt-2 {
-  margin-top: 0.5rem;
-}
-
-.bg-amber-600 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(217 119 6 / var(--tw-bg-opacity));
-}
-
 .underline {
   text-decoration-line: underline;
 }
